@@ -20,9 +20,9 @@ import androidx.room.PrimaryKey
 )
 data class Neuron(
     @PrimaryKey
-    val id: Int,
-    val name: String,
-    val value: String,
+    val id: Int = 0,
+    val name: String = "",
+    val value: String? = null,
     @ColumnInfo(name = "parent_id")
-    val parentId: Int,
+    val parentId: Int? = null,
 )

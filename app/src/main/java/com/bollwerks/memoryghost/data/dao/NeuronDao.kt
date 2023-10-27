@@ -18,10 +18,10 @@ interface NeuronDao {
     fun getById(id: Int): Flow<Neuron>
 
     @Query("SELECT * FROM neuron WHERE name LIKE :name")
-    fun getByName(name: String): Flow<List<Neuron>>
+    fun searchByName(name: String): Flow<List<Neuron>>
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)
-    suspend fun insert(neuron: Neuron)
+    suspend fun insert(neuron: Neuron): Long
 
     @Update
     suspend fun update(neuron: Neuron)

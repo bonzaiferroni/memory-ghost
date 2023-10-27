@@ -57,3 +57,55 @@ interface NeuronDao {
     @Delete
     suspend fun delete(neuron: Neuron)
 }
+
+// database
+@Database(entities = [Neuron::class], version = 1, exportSchema = true)
+abstract class AppDatabase : RoomDatabase() {
+    abstract fun neuronDao(): NeuronDao
+    
+    companion object {
+        fun getDatabase(context: Context) : AppDatabase {
+            return Room.databaseBuilder(context, AppDatabase::class.java, "app_database")
+                .build()
+        }
+    }
+}
+
+// repository
+interface AppRepository {
+    fun getAllNeurons(): Flow<List<Neuron>>
+    fun getNeuronById(id: Int): Flow<Neuron>
+    fun searchNeuronByName(name: String): Flow<List<Neuron>>
+    suspend fun insert(neuron: Neuron): Int
+    suspend fun update(neuron: Neuron)
+    suspend fun delete(neuron: Neuron)
+}
+
+// offline repository
+class DaoRepository(
+    private val neuronDao: NeuronDao
+) : AppRepository {
+    override fun getAllNeurons(): Flow<List<Neuron>> {
+        return neuronDao.getAll()
+    }
+
+    override fun getNeuronById(id: Int): Flow<Neuron> {
+        return neuronDao.getById(id)
+    }
+
+    override fun searchNeuronByName(name: String): Flow<List<Neuron>> {
+        return neuronDao.searchByName(name)
+    }
+
+    override suspend fun insert(neuron: Neuron): Int {
+        return neuronDao.insert(neuron).toInt()
+    }
+
+    override suspend fun update(neuron: Neuron) {
+        neuronDao.update(neuron)
+    }
+
+    override suspend fun delete(neuron: Neuron) {
+        neuronDao.delete(neuron)
+    }
+}
