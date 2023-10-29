@@ -17,6 +17,14 @@ class SampleRepository : DataRepository {
         return flowOf(SampleData.neurons.filter { it.name.contains(name) })
     }
 
+    override fun getNeuronsByParentId(parentId: Int): Flow<List<Neuron>> {
+        return flowOf(SampleData.neurons.filter { it.parentId == parentId })
+    }
+
+    override fun getRootNeurons(): Flow<List<Neuron>> {
+        return flowOf(SampleData.neurons.filter { it.parentId == null })
+    }
+
     override suspend fun insert(neuron: Neuron): Int {
         return 0
     }

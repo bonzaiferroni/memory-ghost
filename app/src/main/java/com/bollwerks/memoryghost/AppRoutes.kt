@@ -12,7 +12,7 @@ object AppRoutes {
         "neuron",
         EzRouteParam(RouteKeys.id, NavType.IntType)
     ) {
-        fun navigate(navController: NavController?, id: Int) {
+        fun navigate(navController: NavController?, id: Int? = null) {
             navigate(navController, RouteKeys.id to id);
         }
 

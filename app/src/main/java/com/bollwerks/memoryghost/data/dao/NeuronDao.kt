@@ -17,6 +17,12 @@ interface NeuronDao {
     @Query("SELECT * FROM neuron WHERE id = :id")
     fun getById(id: Int): Flow<Neuron>
 
+    @Query("SELECT * FROM neuron WHERE parent_id = :parentId")
+    fun getByParentId(parentId: Int): Flow<List<Neuron>>
+
+    @Query("SELECT * FROM neuron WHERE parent_id IS NULL")
+    fun getRoots(): Flow<List<Neuron>>
+
     @Query("SELECT * FROM neuron WHERE name LIKE :name")
     fun searchByName(name: String): Flow<List<Neuron>>
 

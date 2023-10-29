@@ -7,7 +7,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import com.bollwerks.memoryghost.ui.neuron.NeuronListScreen
+import com.bollwerks.memoryghost.ui.neuron.NeuronTreeScreen
 
 @Composable
 fun AppNavHost(
@@ -26,7 +26,7 @@ fun AppNavHost(
             route = AppRoutes.Neuron.route,
             arguments = AppRoutes.Neuron.navArguments
         ) {
-            NeuronListScreen(
+            NeuronTreeScreen(
                 drawerState = drawerState,
                 navController = navController,
                 viewModel = viewModel(factory = viewModelProvider.Factory),

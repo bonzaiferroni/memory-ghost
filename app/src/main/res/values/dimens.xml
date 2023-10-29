@@ -9,4 +9,5 @@
     <dimen name="gap_large">16dp</dimen>
     <dimen name="indent">32dp</dimen>
     <dimen name="icon_size_medium">32dp</dimen>
+    <dimen name="padding_indent">32dp</dimen>
 </resources>

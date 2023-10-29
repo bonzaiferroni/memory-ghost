@@ -15,6 +15,14 @@ class DaoRepository(
         return neuronDao.getById(id)
     }
 
+    override fun getNeuronsByParentId(parentId: Int): Flow<List<Neuron>> {
+        return neuronDao.getByParentId(parentId)
+    }
+
+    override fun getRootNeurons(): Flow<List<Neuron>> {
+        return neuronDao.getRoots()
+    }
+
     override fun searchNeuronByName(name: String): Flow<List<Neuron>> {
         return neuronDao.searchByName(name)
     }

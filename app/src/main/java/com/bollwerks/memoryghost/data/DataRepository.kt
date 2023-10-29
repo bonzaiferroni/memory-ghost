@@ -6,6 +6,8 @@ import kotlinx.coroutines.flow.Flow
 interface DataRepository {
     fun getAllNeurons(): Flow<List<Neuron>>
     fun getNeuronById(id: Int): Flow<Neuron>
+    fun getNeuronsByParentId(parentId: Int): Flow<List<Neuron>>
+    fun getRootNeurons(): Flow<List<Neuron>>
     fun searchNeuronByName(name: String): Flow<List<Neuron>>
     suspend fun insert(neuron: Neuron): Int
     suspend fun update(neuron: Neuron)

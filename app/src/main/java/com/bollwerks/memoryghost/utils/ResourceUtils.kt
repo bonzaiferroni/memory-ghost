@@ -14,6 +14,9 @@ object Paddings {
 
     @Composable
     fun large(): Dp = dimensionResource(R.dimen.padding_large)
+
+    @Composable
+    fun indent(): Dp = dimensionResource(R.dimen.padding_indent)
 }
 
 object Gaps {
