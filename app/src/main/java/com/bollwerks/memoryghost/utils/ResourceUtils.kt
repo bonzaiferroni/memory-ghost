@@ -1,6 +1,9 @@
 package com.bollwerks.memoryghost.utils
 
+import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.composed
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.unit.Dp
 import com.bollwerks.memoryghost.R
@@ -29,3 +32,5 @@ object Gaps {
     @Composable
     fun large(): Dp = dimensionResource(R.dimen.gap_large)
 }
+
+fun Modifier.paddingSmall(): Modifier = composed { this.padding(Paddings.small()) }

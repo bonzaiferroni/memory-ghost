@@ -16,7 +16,7 @@ class NeuronTreeModel(
     private val dataRepository: DataRepository,
 ) : ViewModel() {
 
-    private val neuronId: Int? = AppRoutes.Neuron.getId(savedStateHandle = savedStateHandle)
+    private val neuronId: Int = AppRoutes.Neuron.getId(savedStateHandle = savedStateHandle) ?: 0
 
     private val _uiState = MutableStateFlow(NeuronTreeState())
     private var state
@@ -28,7 +28,7 @@ class NeuronTreeModel(
     val uiState = _uiState.asStateFlow()
 
     init {
-        if (neuronId != null) {
+        if (neuronId != 0) {
             viewModelScope.launch {
                 val neuron = dataRepository.getNeuronById(neuronId).first()
                 if (neuron.parentId != null) {
@@ -53,7 +53,50 @@ class NeuronTreeModel(
     }
 
     fun addNeuron() {
-        TODO("Not yet implemented")
+        state = state.copy(
+            showEditNeuronDialog = true,
+            editNeuronId = 0,
+            editNeuronName = "",
+            editNeuronValue = "",
+        )
+    }
+
+    fun editNeuron() {
+        state = state.copy(
+            showEditNeuronDialog = true,
+            editNeuronId = state.neuron?.id ?: 0,
+            editNeuronName = state.neuron?.name ?: "",
+            editNeuronValue = state.neuron?.value ?: "",
+        )
+    }
+
+    fun editNeuronName(name: String) {
+        state = state.copy(editNeuronName = name)
+    }
+
+    fun editNeuronValue(value: String) {
+        state = state.copy(editNeuronValue = value)
+    }
+
+    fun cancelEditNeuron() {
+        state = state.copy(showEditNeuronDialog = false)
+    }
+
+    fun acceptEditNeuron() {
+        viewModelScope.launch {
+            val neuron = Neuron(
+                id = state.editNeuronId,
+                name = state.editNeuronName,
+                value = state.editNeuronValue.takeIf { it.isNotBlank() },
+                parentId = if (state.isNewNeuron) state.neuron?.id else state.neuron?.parentId,
+            )
+            if (state.isNewNeuron) {
+                dataRepository.insert(neuron)
+            } else {
+                dataRepository.update(neuron)
+            }
+            state = state.copy(showEditNeuronDialog = false)
+        }
     }
 }
 
@@ -61,4 +104,13 @@ data class NeuronTreeState(
     val neuron: Neuron? = null,
     val parent: Neuron? = null,
     val children: List<Neuron> = emptyList(),
-)
+    val showEditNeuronDialog: Boolean = false,
+    val editNeuronId: Int = 0,
+    val editNeuronName: String = "",
+    val editNeuronValue: String = "",
+) {
+    val isNewNeuron: Boolean
+        get() = editNeuronId == 0
+    val isValidEditNeuron: Boolean
+        get() = editNeuronName.isNotBlank()
+}

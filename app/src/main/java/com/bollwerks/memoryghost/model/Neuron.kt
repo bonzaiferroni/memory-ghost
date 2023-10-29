@@ -19,7 +19,7 @@ import androidx.room.PrimaryKey
     indices = [Index("name")]
 )
 data class Neuron(
-    @PrimaryKey
+    @PrimaryKey(autoGenerate = true)
     val id: Int = 0,
     val name: String = "",
     val value: String? = null,

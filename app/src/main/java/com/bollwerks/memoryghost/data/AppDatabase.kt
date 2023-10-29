@@ -7,7 +7,7 @@ import androidx.room.RoomDatabase
 import com.bollwerks.memoryghost.data.dao.NeuronDao
 import com.bollwerks.memoryghost.model.Neuron
 
-@Database(entities = [Neuron::class], version = 1, exportSchema = true)
+@Database(entities = [Neuron::class], version = 4, exportSchema = true)
 abstract class AppDatabase : RoomDatabase() {
     abstract fun neuronDao(): NeuronDao
 
@@ -18,6 +18,7 @@ abstract class AppDatabase : RoomDatabase() {
         fun getDatabase(context: Context) : AppDatabase {
             return Instance ?: synchronized(this) {
                 Room.databaseBuilder(context, AppDatabase::class.java, "app_database")
+                    .fallbackToDestructiveMigration()
                     .build()
                     .also { Instance = it }
             }

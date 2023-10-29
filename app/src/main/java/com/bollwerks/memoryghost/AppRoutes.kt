@@ -13,7 +13,7 @@ object AppRoutes {
         EzRouteParam(RouteKeys.id, NavType.IntType)
     ) {
         fun navigate(navController: NavController?, id: Int? = null) {
-            navigate(navController, RouteKeys.id to id);
+            navigate(navController, RouteKeys.id to (id ?: 0));
         }
 
         fun getId(savedStateHandle: SavedStateHandle): Int? {
