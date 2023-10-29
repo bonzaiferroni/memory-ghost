@@ -1,0 +1,356 @@
+// dependencies
+val nav_version = "2.7.4"
+implementation("androidx.navigation:navigation-compose:$nav_version")
+
+// EzRoute
+open class EzRoute(
+    val name: String,
+    vararg params: EzRouteParam<*>,
+) {
+    val route: String
+    val params: List<EzRouteParam<*>> = params.toList()
+    val navArguments: List<NamedNavArgument>
+
+    init {
+        this.route = buildRouteTemplate(name, params)
+        this.navArguments = buildNavArguments(params)
+    }
+
+    fun navigate(navController: NavController?, vararg args: Pair<String, Any?>) {
+        val route = buildRoute(args)
+        navController?.navigate(route)
+    }
+
+    fun setEnumArg(key: String, value: Enum<*>): Pair<String, Any> {
+        return key to value.toString()
+    }
+
+    inline fun <reified T : Enum<T>> getEnumArg(
+        savedStateHandle: SavedStateHandle, key: String
+    ): T? {
+        val enumValue = savedStateHandle.get<String>(key) ?: return null
+        return enumValueOf<T>(enumValue)
+    }
+
+    fun setDateArg(key: String, value: LocalDate): Pair<String, Any> {
+        return key to value.toString()
+    }
+
+    fun getDateArg(savedStateHandle: SavedStateHandle, key: String): LocalDate? {
+        val date = savedStateHandle.get<String>(key) ?: return null
+        return LocalDate.parse(date)
+    }
+
+    private fun buildRoute(args: Array<out Pair<String, Any?>>): String {
+        val sb = StringBuilder(this.name)
+        var addedAmpersand = false
+        for (i in this.params.indices) {
+            val param = this.params[i]
+            val arg = args.firstOrNull { it.first == param.name }
+                ?: if (param.isOptional) continue
+                else throw IllegalArgumentException("Missing required argument: ${param.name}")
+            if (param.isOptional) {
+                // optional
+                if (arg.second == null) continue
+                if (!addedAmpersand) {
+                    sb.append('?')
+                    addedAmpersand = true
+                } else {
+                    sb.append('&')
+                }
+                sb.append(arg.first)
+                sb.append('=')
+                sb.append(arg.second)
+            } else {
+                // required
+                sb.append('/')
+                sb.append(arg.second)
+            }
+        }
+        return sb.toString()
+    }
+
+    private fun buildRouteTemplate(name: String, args: Array<out EzRouteParam<*>>): String {
+        var route = name
+        val optionalArgs = args.filter { it.isOptional }.map { it.name }
+        val requiredArgs = args.filter { !it.isOptional }.map { it.name }
+        requiredArgs.forEach { arg ->
+            route += "/{$arg}"
+        }
+        if (optionalArgs.isNotEmpty()) {
+            route += "?"
+            for (i in optionalArgs.indices) {
+                val argName = optionalArgs[i]
+                route += if (i == 0) {
+                    "$argName={$argName}"
+                } else {
+                    "&$argName={$argName}"
+                }
+            }
+        }
+        return route
+    }
+
+    private fun buildNavArguments(args: Array<out EzRouteParam<*>>): List<NamedNavArgument> {
+        return args.map { arg ->
+            if (arg.isOptional) {
+                navArgument(arg.name) {
+                    type = arg.type
+                    defaultValue = arg.defaultValue
+                }
+            } else {
+                navArgument(arg.name) {
+                    type = arg.type
+                }
+            }
+
+        }
+    }
+}
+
+open class EzRouteParam<T>(
+    val name: String,
+    val type: NavType<T>,
+    val defaultValue: T? = null,
+    val isOptional: Boolean = false,
+)
+
+class EzEnumParam<T : Enum<T>>(
+    name: String,
+    defaultValue: T? = null,
+    isOptional: Boolean = false,
+) : EzRouteParam<String?>(
+    name = name,
+    type = NavType.StringType,
+    defaultValue = defaultValue?.toString(),
+    isOptional = isOptional,
+)
+
+class EzDateParam(
+    name: String,
+    defaultValue: LocalDate? = null,
+    isOptional: Boolean = false,
+) : EzRouteParam<String?>(
+    name = name,
+    type = NavType.StringType,
+    defaultValue = defaultValue?.toString(),
+    isOptional = isOptional,
+)
+
+// AppDrawer
+@Composable
+fun PgAppDrawer(
+    navController: NavHostController = rememberNavController(),
+    drawerState: DrawerState = rememberDrawerState(initialValue = DrawerValue.Closed),
+) {
+    ModalNavigationDrawer(
+        drawerState = drawerState,
+        drawerContent = {
+            AppDrawerContent(
+                drawerState = drawerState,
+                menuItems = DrawerParams.drawerButtons,
+                defaultPick = PgRoutes.Home
+            ) { onUserPickedOption ->
+                navController.navigate(onUserPickedOption.name)
+            }
+        }
+    ) {
+        PgNavHost(
+            navController = navController,
+            drawerState = drawerState
+        )
+    }
+}
+
+// viewmodel
+class NeuronListModel(
+    private val savedStateHandle: SavedStateHandle,
+    private val dataRepository: DataRepository,
+) : ViewModel() {
+}
+
+// AppViewModelProvider
+class ViewModelProvider(
+    private val dataRepository: DataRepository,
+) {
+    val Factory = viewModelFactory {
+        initializer {
+            val savedStateHandle = createSavedStateHandle()
+            NeuronListModel(savedStateHandle, dataRepository)
+        }
+    }
+}
+
+// AppNavHost
+@Composable
+fun AppNavHost(
+    viewModelProvider: ViewModelProvider,
+    navController: NavHostController,
+    drawerState: DrawerState,
+) {
+    NavHost(
+        navController = navController,
+        startDestination = AppRoutes.Neuron.route
+    ) {
+        composable(route = AppRoutes.Home.route) {
+            Text("Hello home!");
+        }
+        composable(
+            route = AppRoutes.Neuron.route,
+            arguments = AppRoutes.Neuron.navArguments
+        ) {
+            NeuronListScreen(
+                drawerState = drawerState,
+                navController = navController,
+                viewModel = viewModel(factory = viewModelProvider.Factory),
+            )
+        }
+    }
+}
+
+// AppRoutes
+object AppRoutes {
+    object Home : EzRoute("home")
+    object Neuron : EzRoute(
+        "neuron",
+        EzRouteParam(RouteKeys.id, NavType.IntType)
+    ) {
+        fun navigate(navController: NavController?, id: Int) {
+            navigate(navController, RouteKeys.id to id);
+        }
+
+        fun getId(savedStateHandle: SavedStateHandle): Int? {
+            return savedStateHandle.get<Int>(RouteKeys.id)
+        }
+    }
+}
+
+object RouteKeys {
+    const val id = "id"
+}
+
+// AppDrawer
+@Composable
+fun PgAppDrawer(
+    navController: NavHostController = rememberNavController(),
+    drawerState: DrawerState = rememberDrawerState(initialValue = DrawerValue.Closed),
+) {
+    ModalNavigationDrawer(
+        drawerState = drawerState,
+        drawerContent = {
+            AppDrawerContent(
+                drawerState = drawerState,
+                menuItems = DrawerParams.drawerButtons,
+                defaultPick = PgRoutes.Home
+            ) { onUserPickedOption ->
+                navController.navigate(onUserPickedOption.name)
+            }
+        }
+    ) {
+        PgNavHost(
+            navController = navController,
+            drawerState = drawerState
+        )
+    }
+}
+
+// T for generic type to be used for the picking
+@Composable
+fun AppDrawerContent(
+    drawerState: DrawerState,
+    menuItems: List<AppDrawerItemInfo>,
+    defaultPick: EzRoute,
+    onClick: (EzRoute) -> Unit
+) {
+    // default home destination to avoid duplication
+    var currentPick by remember { mutableStateOf(defaultPick) }
+    val coroutineScope = rememberCoroutineScope()
+
+    ModalDrawerSheet {
+        Surface(color = MaterialTheme.colorScheme.background) {
+            Column(
+                horizontalAlignment = Alignment.CenterHorizontally,
+            ) {
+                // header image on top of the drawer
+                Image(
+                    painter = painterResource(id = R.drawable.ic_launcher_foreground),
+                    contentDescription = "Main app icon",
+                    modifier = Modifier.size(dimensionResource(R.dimen.app_icon_size))
+                )
+                // column of options to pick from for user
+                LazyColumn(
+                    modifier = Modifier.padding(horizontal = Paddings.small()),
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    verticalArrangement = Arrangement.spacedBy(Gaps.medium())
+                ) {
+                    // generates on demand the required composables
+                    items(menuItems) { item ->
+                        // custom UI representation of the button
+                        AppDrawerItem(item = item) { navOption ->
+
+                            // if it is the same - ignore the click
+                            if (currentPick == navOption) {
+                                return@AppDrawerItem
+                            }
+
+                            currentPick = navOption
+
+                            // close the drawer after clicking the option
+                            coroutineScope.launch {
+                                drawerState.close()
+                            }
+
+                            // navigate to the required screen
+                            onClick(navOption)
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+
+@Composable
+fun AppDrawerItem(item: AppDrawerItemInfo, onClick: (options: EzRoute) -> Unit) =
+    // making surface clickable causes to show the appropriate splash animation
+    Surface(
+        color = MaterialTheme.colorScheme.onPrimary,
+        modifier = Modifier.width(dimensionResource(R.dimen.app_icon_size)),
+        onClick = { onClick(item.drawerOption) },
+        shape = RoundedCornerShape(50),
+    ) {
+        Row(
+            horizontalArrangement = Arrangement.Start,
+            verticalAlignment = Alignment.CenterVertically,
+            modifier = Modifier.padding(Paddings.medium())
+        ) {
+            Icon(
+                imageVector = item.icon,
+                contentDescription = null,
+                modifier = Modifier.size(dimensionResource(R.dimen.icon_size_medium))
+            )
+            Spacer(modifier = Modifier.width(Gaps.large()))
+            Text(
+                text = item.title,
+                style = MaterialTheme.typography.bodyLarge,
+                textAlign = TextAlign.Center,
+            )
+        }
+    }
+
+// base data container for the button creation
+// takes in the resources IDs
+data class AppDrawerItemInfo(
+    val drawerOption: EzRoute,
+    val title: String,
+    val icon: ImageVector,
+)
+
+// list of the buttons
+object DrawerParams {
+    val drawerButtons = arrayListOf(
+        AppDrawerItemInfo(PgRoutes.Home, "Home", Icons.Filled.Home),
+        AppDrawerItemInfo(PgRoutes.Food, "Foods", Icons.Filled.ShoppingCart),
+        AppDrawerItemInfo(PgRoutes.Day, "Day", Icons.Filled.Favorite),
+    )
+}

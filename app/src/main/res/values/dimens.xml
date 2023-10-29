@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="app_icon_size">150dp</dimen>
+    <dimen name="padding_small">8dp</dimen>
+    <dimen name="padding_medium">16dp</dimen>
+    <dimen name="padding_large">24dp</dimen>
+    <dimen name="gap_small">4dp</dimen>
+    <dimen name="gap_medium">8dp</dimen>
+    <dimen name="gap_large">16dp</dimen>
+    <dimen name="indent">32dp</dimen>
+    <dimen name="icon_size_medium">32dp</dimen>
+</resources>

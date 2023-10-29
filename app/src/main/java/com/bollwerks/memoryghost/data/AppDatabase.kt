@@ -12,9 +12,15 @@ abstract class AppDatabase : RoomDatabase() {
     abstract fun neuronDao(): NeuronDao
 
     companion object {
+        @Volatile
+        private var Instance: AppDatabase? = null
+
         fun getDatabase(context: Context) : AppDatabase {
-            return Room.databaseBuilder(context, AppDatabase::class.java, "app_database")
-                .build()
+            return Instance ?: synchronized(this) {
+                Room.databaseBuilder(context, AppDatabase::class.java, "app_database")
+                    .build()
+                    .also { Instance = it }
+            }
         }
     }
 }

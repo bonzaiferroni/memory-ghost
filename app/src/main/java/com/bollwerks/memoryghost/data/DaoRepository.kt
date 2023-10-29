@@ -6,7 +6,7 @@ import kotlinx.coroutines.flow.Flow
 
 class DaoRepository(
     private val neuronDao: NeuronDao
-) : AppRepository {
+) : DataRepository {
     override fun getAllNeurons(): Flow<List<Neuron>> {
         return neuronDao.getAll()
     }

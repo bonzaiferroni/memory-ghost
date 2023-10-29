@@ -3,7 +3,7 @@ package com.bollwerks.memoryghost.data
 import com.bollwerks.memoryghost.model.Neuron
 import kotlinx.coroutines.flow.Flow
 
-interface AppRepository {
+interface DataRepository {
     fun getAllNeurons(): Flow<List<Neuron>>
     fun getNeuronById(id: Int): Flow<Neuron>
     fun searchNeuronByName(name: String): Flow<List<Neuron>>

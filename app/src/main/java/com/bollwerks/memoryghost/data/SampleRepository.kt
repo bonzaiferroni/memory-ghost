@@ -4,7 +4,7 @@ import com.bollwerks.memoryghost.model.Neuron
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flowOf
 
-class SampleRepository : AppRepository {
+class SampleRepository : DataRepository {
     override fun getAllNeurons(): Flow<List<Neuron>> {
         return flowOf(SampleData.neurons)
     }
