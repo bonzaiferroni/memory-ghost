@@ -1,33 +1,26 @@
 package com.bollwerks.memoryghost.model
 
-import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.ForeignKey
 import androidx.room.Index
 import androidx.room.PrimaryKey
+import java.time.Instant
 
 @Entity(
-    tableName = "neuron",
+    tableName = "refresh",
     foreignKeys = [
         ForeignKey(
             entity = Neuron::class,
             parentColumns = ["id"],
-            childColumns = ["parent_id"],
+            childColumns = ["neuron_id"],
             onDelete = ForeignKey.CASCADE
         )
     ],
     indices = [Index("name")]
 )
-data class Neuron(
+data class Refresh (
     @PrimaryKey(autoGenerate = true)
     val id: Int = 0,
-    val name: String = "",
-    val value: String? = null,
-    @ColumnInfo(name = "parent_id")
-    val parentId: Int? = null,
-    val priority: Int = 0,
-    val interval: Int = 0,
-    val overprep: Int = 0,
-    val strength: Int = 0,
-    val refreshed: Long? = null,
+    val time: Instant = Instant.now(),
+    val correct: Boolean = false,
 )

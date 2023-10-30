@@ -1,0 +1,1 @@
+I want the capability for offline usage of the app. I also want a way to synchronize/export data. I plan to try this with Google Sheets first. SQL tables can be converted into spreadsheets fairly easily. The one issue I can imagine is id assignment, it may take a little extra work to get that right.
