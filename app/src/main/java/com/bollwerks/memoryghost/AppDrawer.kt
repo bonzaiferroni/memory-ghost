@@ -12,6 +12,8 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Build
+import androidx.compose.material.icons.filled.Face
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material3.DrawerState
 import androidx.compose.material3.DrawerValue
@@ -49,6 +51,8 @@ fun AppDrawer(
 ) {
     val drawerButtons = arrayListOf(
         AppDrawerItemInfo(AppRoutes.Home, "Home", Icons.Filled.Home),
+        AppDrawerItemInfo(AppRoutes.Neuron, "Neuron", Icons.Filled.Face),
+        AppDrawerItemInfo(AppRoutes.Sandbox, "Sandbox", Icons.Filled.Build),
     )
 
     ModalNavigationDrawer(

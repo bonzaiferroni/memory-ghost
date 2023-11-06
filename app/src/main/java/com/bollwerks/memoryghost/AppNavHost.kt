@@ -8,6 +8,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.bollwerks.memoryghost.ui.neuron.NeuronTreeScreen
+import com.bollwerks.memoryghost.ui.sandbox.SandboxScreen
 
 @Composable
 fun AppNavHost(
@@ -20,7 +21,7 @@ fun AppNavHost(
         startDestination = AppRoutes.Neuron.route
     ) {
         composable(route = AppRoutes.Home.route) {
-            Text("Hello home!");
+            Text("Hello home!")
         }
         composable(
             route = AppRoutes.Neuron.route,
@@ -30,6 +31,11 @@ fun AppNavHost(
                 drawerState = drawerState,
                 navController = navController,
                 viewModel = viewModel(factory = viewModelProvider.Factory),
+            )
+        }
+        composable(route = AppRoutes.Sandbox.route) {
+            SandboxScreen(
+                drawerState = drawerState,
             )
         }
     }

@@ -53,6 +53,7 @@ fun NeuronTreeScreen(
     modifier: Modifier = Modifier,
 ) {
     val uiState by viewModel.uiState.collectAsState()
+    val ctx = LocalContext.current
 
     AppDialog(
         showDialog = uiState.showEditNeuronDialog,
@@ -95,7 +96,7 @@ fun NeuronTreeScreen(
             MoreMenuItem(
                 name = "Export",
                 onClick = {
-                    viewModel.exportTree(LocalContext.current)
+                    viewModel.exportTree(ctx)
                 },
             ),
         )

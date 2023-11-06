@@ -20,6 +20,7 @@ object AppRoutes {
             return savedStateHandle.get<Int>(RouteKeys.id)
         }
     }
+    object Sandbox : EzRoute("sandbox")
 }
 
 object RouteKeys {
