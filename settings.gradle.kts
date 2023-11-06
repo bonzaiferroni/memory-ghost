@@ -15,3 +15,4 @@ dependencyResolutionManagement {
 
 rootProject.name = "Memory Ghost"
 include(":app")
+include(":app:EzNav")
