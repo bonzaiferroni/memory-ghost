@@ -1,5 +1,6 @@
 package com.bollwerks.memoryghost.ui.common
 
+import android.content.res.Configuration
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.padding
@@ -18,6 +19,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.tooling.preview.Preview
+import com.bollwerks.memoryghost.ui.theme.MemoryGhostTheme
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -27,7 +30,8 @@ fun AppScaffold(
     modifier: Modifier = Modifier,
     drawerState: DrawerState? = null,
     fabParams: FabParams? = null,
-    titleContent: @Composable () -> Unit = { Text(title) },
+    titleContent: @Composable (() -> Unit)? = null,
+    menuItems: List<MoreMenuItem>? = null,
     content: @Composable ColumnScope.() -> Unit
 ) {
     Scaffold(
@@ -35,7 +39,9 @@ fun AppScaffold(
             // to run the animation independently
             val coroutineScope = rememberCoroutineScope()
             CenterAlignedTopAppBar(
-                title = titleContent,
+                title = titleContent ?: {
+                    Text(title)
+                },
                 navigationIcon = {
                     IconButton(onClick = {
                         coroutineScope.launch {
@@ -50,11 +56,16 @@ fun AppScaffold(
                         )
                     }
                 },
+                actions = {
+                    if (menuItems != null) {
+                        MoreMenu(items = menuItems)
+                    }
+                },
             )
         },
         floatingActionButton = {
             fabParams?.let {
-                FloatingActionButton(onClick = it.onClick ) {
+                FloatingActionButton(onClick = it.onClick) {
                     Icon(it.icon, contentDescription = it.contentDescription)
                 }
             }
@@ -66,6 +77,23 @@ fun AppScaffold(
             Column(modifier = Modifier.padding(paddingValues)) {
                 content()
             }
+        }
+    }
+}
+
+@Preview(uiMode = Configuration.UI_MODE_NIGHT_YES)
+@Composable
+fun AppScaffoldPreview() {
+    MemoryGhostTheme {
+        AppScaffold(
+            title = "Title",
+            menuItems = listOf(
+                MoreMenuItem("Item 1") {},
+                MoreMenuItem("Item 2") {},
+                MoreMenuItem("Item 3") {},
+            )
+        ) {
+            Text("Content")
         }
     }
 }

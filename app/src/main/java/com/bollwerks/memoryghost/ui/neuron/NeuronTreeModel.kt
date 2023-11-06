@@ -1,11 +1,14 @@
 package com.bollwerks.memoryghost.ui.neuron
 
+import android.content.Context
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.bollwerks.memoryghost.AppRoutes
 import com.bollwerks.memoryghost.data.DataRepository
+import com.bollwerks.memoryghost.data.export.toNeuronNodes
 import com.bollwerks.memoryghost.model.Neuron
+import com.bollwerks.memoryghost.utils.objectToFile
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.first
@@ -96,6 +99,14 @@ class NeuronTreeModel(
                 dataRepository.update(neuron)
             }
             state = state.copy(showEditNeuronDialog = false)
+        }
+    }
+
+    fun exportTree(context: Context) {
+        viewModelScope.launch {
+            val neurons = dataRepository.getRootNeurons().first()
+            val nodes = neurons.toNeuronNodes()
+            context.objectToFile(nodes, "neurons.json")
         }
     }
 }

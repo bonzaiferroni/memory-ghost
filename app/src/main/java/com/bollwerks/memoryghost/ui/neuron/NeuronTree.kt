@@ -24,6 +24,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.SavedStateHandle
@@ -36,6 +37,7 @@ import com.bollwerks.memoryghost.ui.common.AppDialog
 import com.bollwerks.memoryghost.ui.common.AppScaffold
 import com.bollwerks.memoryghost.ui.common.FabParams
 import com.bollwerks.memoryghost.ui.common.MgIconButton
+import com.bollwerks.memoryghost.ui.common.MoreMenuItem
 import com.bollwerks.memoryghost.ui.common.RevealBox
 import com.bollwerks.memoryghost.ui.common.ValueField
 import com.bollwerks.memoryghost.ui.theme.MemoryGhostTheme
@@ -89,8 +91,15 @@ fun NeuronTreeScreen(
             onClick = viewModel::addNeuron,
             contentDescription = "Add child neuron",
         ),
-
-        ) {
+        menuItems = listOf(
+            MoreMenuItem(
+                name = "Export",
+                onClick = {
+                    viewModel.exportTree(LocalContext.current)
+                },
+            ),
+        )
+    ) {
         Column(
             modifier = Modifier
                 .fillMaxWidth()

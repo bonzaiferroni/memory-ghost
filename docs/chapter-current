@@ -1,0 +1,49 @@
+// Add the Gson dependency to your build.gradle:
+implementation("com.google.code.gson:gson:2.10.1")
+
+// Create a function to parse objects into JSON:
+import com.google.gson.Gson
+
+fun objectToJson(obj: Any): String {
+    val gson = Gson()
+    return gson.toJson(obj)
+}
+
+// Use the function to convert any object to JSON:
+data class Person(val name: String, val age: Int)
+
+fun main() {
+    val person = Person("John", 30)
+    val json = objectToJson(person)
+    println(json)  // Outputs: {"name":"John","age":30}
+}
+
+// request permissions 
+// AndroidManifest.xml
+<uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+
+// save the json object to a file:
+import android.content.Context
+import java.io.OutputStreamWriter
+
+fun saveJsonToFile(context: Context, filename: String, json: String) {
+    val fileOutputStream = context.openFileOutput(filename, Context.MODE_PRIVATE)
+    val writer = OutputStreamWriter(fileOutputStream)
+    writer.use { it.write(json) }
+}
+
+// use in composable
+@Composable
+fun SaveJsonButton(jsonObject: Any) {
+    val context = LocalContext.current
+    val json = objectToJson(jsonObject) // Assuming objectToJson is the function provided earlier
+
+    Button(onClick = {
+        saveJsonToFile(context, "myfile.json", json)
+    }) {
+        Text("Save JSON")
+    }
+}
+
+
+
