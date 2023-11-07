@@ -1,9 +1,5 @@
 package com.bollwerks.memoryghost
 
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Build
-import androidx.compose.material.icons.filled.Face
-import androidx.compose.material.icons.filled.Home
 import androidx.compose.material3.Text
 import androidx.compose.ui.res.painterResource
 import androidx.lifecycle.createSavedStateHandle
@@ -37,7 +33,7 @@ val appConfig = EzConfig(
     screens = listOf(
         ScreenConfig(
             route = AppRoutes.Home,
-            drawerLink = DrawerLinkConfig(AppRoutes.Home, "Home", Icons.Filled.Home),
+            drawerLink = DrawerLinkConfig(AppRoutes.Home, "Home", "🏠"),
             content = { _, _, _ ->
                 Text("Hello home!")
             }
@@ -45,7 +41,7 @@ val appConfig = EzConfig(
         ScreenConfig(
             route = AppRoutes.Neuron,
             isDefaultRoute = true,
-            drawerLink = DrawerLinkConfig(AppRoutes.Neuron, "Neuron", Icons.Filled.Face),
+            drawerLink = DrawerLinkConfig(AppRoutes.Neuron, "Neuron", "🧠"),
             content = { navController, drawerState, vmFactory ->
                 NeuronTreeScreen(
                     drawerState = drawerState,
@@ -56,7 +52,7 @@ val appConfig = EzConfig(
         ),
         ScreenConfig(
             route = AppRoutes.Sandbox,
-            drawerLink = DrawerLinkConfig(AppRoutes.Sandbox, "Sandbox", Icons.Filled.Build),
+            drawerLink = DrawerLinkConfig(AppRoutes.Sandbox, "Sandbox", "\uD83E\uDDA6"),
             content = { _, drawerState, _ ->
                 SandboxScreen(
                     drawerState = drawerState,
