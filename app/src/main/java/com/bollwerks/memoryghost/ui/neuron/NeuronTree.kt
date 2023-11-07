@@ -30,7 +30,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.SavedStateHandle
 import androidx.navigation.NavController
 import com.bollwerks.eznav.EzScaffold
-import com.bollwerks.eznav.MoreMenuItem
+import com.bollwerks.eznav.ScreenMenuItem
 import com.bollwerks.eznav.model.FabConfig
 import com.bollwerks.memoryghost.AppRoutes
 import com.bollwerks.memoryghost.RouteKeys
@@ -86,14 +86,14 @@ fun NeuronTreeScreen(
     EzScaffold(
         modifier = modifier,
         drawerState = drawerState,
-        title = "\uD83C\uDF33",
+        title = "🌳",
         fabConfig = FabConfig(
             icon = Icons.Filled.Add,
             onClick = viewModel::addNeuron,
             contentDescription = "Add child neuron",
         ),
         menuItems = listOf(
-            MoreMenuItem(
+            ScreenMenuItem(
                 name = "Export",
                 onClick = {
                     viewModel.exportTree(ctx)

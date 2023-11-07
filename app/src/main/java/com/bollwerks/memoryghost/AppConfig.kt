@@ -8,6 +8,7 @@ import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
 import com.bollwerks.eznav.model.DrawerLinkConfig
 import com.bollwerks.eznav.model.EzConfig
+import com.bollwerks.eznav.model.ScaffoldConfig
 import com.bollwerks.eznav.model.ScreenConfig
 import com.bollwerks.memoryghost.data.AppDatabase
 import com.bollwerks.memoryghost.data.DaoRepository
@@ -36,7 +37,10 @@ val appConfig = EzConfig(
             drawerLink = DrawerLinkConfig(AppRoutes.Home, "Home", "🏠"),
             content = { _, _, _ ->
                 Text("Hello home!")
-            }
+            },
+            scaffold = ScaffoldConfig(
+                title = "Home"
+            ),
         ),
         ScreenConfig(
             route = AppRoutes.Neuron,
@@ -48,11 +52,11 @@ val appConfig = EzConfig(
                     navController = navController,
                     viewModel = viewModel(factory = vmFactory),
                 )
-            }
+            },
         ),
         ScreenConfig(
             route = AppRoutes.Sandbox,
-            drawerLink = DrawerLinkConfig(AppRoutes.Sandbox, "Sandbox", "\uD83E\uDDA6"),
+            drawerLink = DrawerLinkConfig(AppRoutes.Sandbox, "Sandbox", "🦦"),
             content = { _, drawerState, _ ->
                 SandboxScreen(
                     drawerState = drawerState,
