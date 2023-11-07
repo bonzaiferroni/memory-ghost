@@ -10,7 +10,7 @@ object AppRoutes {
     object Home : EzRoute("home")
     object Neuron : EzRoute(
         "neuron",
-        RouteParam(RouteKeys.id, NavType.IntType, defaultValue = 0)
+        RouteParam(RouteKeys.id, NavType.IntType, isOptional = true, defaultValue = 0)
     ) {
         fun navigate(navController: NavController?, id: Int? = null) {
             navigate(navController, RouteKeys.id to (id ?: 0))
