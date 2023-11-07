@@ -4,13 +4,13 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.navigation.NavController
 import androidx.navigation.NavType
 import com.bollwerks.eznav.EzRoute
-import com.bollwerks.eznav.EzRouteParam
+import com.bollwerks.eznav.model.RouteParam
 
 object AppRoutes {
     object Home : EzRoute("home")
     object Neuron : EzRoute(
         "neuron",
-        EzRouteParam(RouteKeys.id, NavType.IntType, defaultValue = 0)
+        RouteParam(RouteKeys.id, NavType.IntType, defaultValue = 0)
     ) {
         fun navigate(navController: NavController?, id: Int? = null) {
             navigate(navController, RouteKeys.id to (id ?: 0))

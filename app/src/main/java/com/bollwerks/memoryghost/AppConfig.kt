@@ -10,11 +10,11 @@ import androidx.lifecycle.createSavedStateHandle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
-import com.bollwerks.eznav.DrawerConfig
-import com.bollwerks.eznav.DrawerItemConfig
-import com.bollwerks.eznav.EzConfig
-import com.bollwerks.eznav.NavComposableConfig
-import com.bollwerks.eznav.NavHostConfig
+import com.bollwerks.eznav.model.DrawerConfig
+import com.bollwerks.eznav.model.DrawerItemConfig
+import com.bollwerks.eznav.model.EzConfig
+import com.bollwerks.eznav.model.NavHostConfig
+import com.bollwerks.eznav.model.ScreenConfig
 import com.bollwerks.memoryghost.data.AppDatabase
 import com.bollwerks.memoryghost.data.DaoRepository
 import com.bollwerks.memoryghost.ui.neuron.NeuronTreeModel
@@ -45,14 +45,14 @@ val appConfig = EzConfig(
                 }
             }
         },
-        composableConfigs = listOf(
-            NavComposableConfig(
+        screenConfigs = listOf(
+            ScreenConfig(
                 route = AppRoutes.Home.route,
                 content = { _, _, _ ->
                     Text("Hello home!")
                 }
             ),
-            NavComposableConfig(
+            ScreenConfig(
                 route = AppRoutes.Neuron.route,
                 content = { navController, drawerState, vmFactory ->
                     NeuronTreeScreen(
@@ -62,7 +62,7 @@ val appConfig = EzConfig(
                     )
                 }
             ),
-            NavComposableConfig(
+            ScreenConfig(
                 route = AppRoutes.Sandbox.route,
                 content = { _, drawerState, _ ->
                     SandboxScreen(
