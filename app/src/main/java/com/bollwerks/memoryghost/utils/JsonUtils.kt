@@ -25,7 +25,7 @@ fun Context.loadJsonFromFile(filename: String): String {
     return this.openFileInput(filename).bufferedReader().use { it.readText() }
 }
 
-fun <T> jsonToObject(json: String): T {
-    val typeToken = object : TypeToken<T>() {}
-    return Gson().fromJson(json, typeToken.type)
+inline fun <reified T> jsonToObject(json: String): T {
+    val type = object : TypeToken<T>() {}.type
+    return Gson().fromJson(json, type)
 }
