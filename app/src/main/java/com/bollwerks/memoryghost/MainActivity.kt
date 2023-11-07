@@ -21,8 +21,8 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.bollwerks.eznav.AppDestination
-import com.bollwerks.eznav.AppDrawer
 import com.bollwerks.eznav.DrawerConfig
+import com.bollwerks.eznav.EzDrawer
 import com.bollwerks.eznav.NavComposableConfig
 import com.bollwerks.eznav.NavHostConfig
 import com.bollwerks.memoryghost.data.AppDatabase
@@ -90,7 +90,7 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
-                    AppDrawer(
+                    EzDrawer(
                         destinations = destinations,
                         drawerConfig = drawerConfig,
                         navHostConfig = navHostConfig,

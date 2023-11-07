@@ -29,15 +29,15 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.SavedStateHandle
 import androidx.navigation.NavController
+import com.bollwerks.eznav.EzScaffold
+import com.bollwerks.eznav.FabParams
 import com.bollwerks.memoryghost.AppRoutes
 import com.bollwerks.memoryghost.RouteKeys
 import com.bollwerks.memoryghost.data.SampleRepository
 import com.bollwerks.memoryghost.ui.common.AcceptCancelButtons
 import com.bollwerks.memoryghost.ui.common.AppDialog
-import com.bollwerks.memoryghost.ui.common.AppScaffold
-import com.bollwerks.memoryghost.ui.common.FabParams
 import com.bollwerks.memoryghost.ui.common.MgIconButton
-import com.bollwerks.memoryghost.ui.common.MoreMenuItem
+import com.bollwerks.eznav.MoreMenuItem
 import com.bollwerks.memoryghost.ui.common.RevealBox
 import com.bollwerks.memoryghost.ui.common.ValueField
 import com.bollwerks.memoryghost.ui.theme.MemoryGhostTheme
@@ -83,7 +83,7 @@ fun NeuronTreeScreen(
         }
     }
 
-    AppScaffold(
+    EzScaffold(
         modifier = modifier,
         drawerState = drawerState,
         title = "\uD83C\uDF33",
