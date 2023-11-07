@@ -6,8 +6,12 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.bollwerks.memoryghost.AppRoutes
 import com.bollwerks.memoryghost.data.DataRepository
+import com.bollwerks.memoryghost.data.export.NeuronNode
+import com.bollwerks.memoryghost.data.export.importNeurons
 import com.bollwerks.memoryghost.data.export.toNeuronNodes
 import com.bollwerks.memoryghost.model.Neuron
+import com.bollwerks.memoryghost.utils.jsonToObject
+import com.bollwerks.memoryghost.utils.loadJsonFromFile
 import com.bollwerks.memoryghost.utils.objectToFile
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -107,6 +111,14 @@ class NeuronTreeModel(
             val neurons = dataRepository.getRootNeurons().first()
             val nodes = neurons.toNeuronNodes()
             context.objectToFile(nodes, "neurons.json")
+        }
+    }
+
+    fun importTree(context: Context) {
+        viewModelScope.launch {
+            val json = context.loadJsonFromFile("neurons.json")
+            val nodes = jsonToObject<List<NeuronNode>>(json)
+            dataRepository.importNeurons(nodes)
         }
     }
 }

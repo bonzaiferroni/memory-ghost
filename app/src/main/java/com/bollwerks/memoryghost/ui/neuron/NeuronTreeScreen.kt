@@ -99,6 +99,12 @@ fun NeuronTreeScreen(
                     viewModel.exportTree(ctx)
                 },
             ),
+            ScreenMenuItem(
+                name = "Import",
+                onClick = {
+                    viewModel.importTree(ctx)
+                },
+            ),
         )
     ) {
         Column(

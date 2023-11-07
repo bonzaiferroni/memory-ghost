@@ -10,14 +10,20 @@ object AppRoutes {
     object Home : EzRoute("home")
     object Neuron : EzRoute(
         "neuron",
-        RouteParam(RouteKeys.id, NavType.IntType, isOptional = true, defaultValue = 0)
+        RouteParam(RouteKeys.id, NavType.IntType, true, 0)
     ) {
         fun navigate(navController: NavController?, id: Int? = null) {
             navigate(navController, RouteKeys.id to (id ?: 0))
         }
 
         fun getId(savedStateHandle: SavedStateHandle): Int? {
-            return savedStateHandle.get<Int>(RouteKeys.id)
+            val value:Int? = savedStateHandle[RouteKeys.id]
+//            return if (value is String) {
+//                value.toInt()
+//            } else {
+//                value as? Int
+//            }
+            return value
         }
     }
     object Sandbox : EzRoute("sandbox")
