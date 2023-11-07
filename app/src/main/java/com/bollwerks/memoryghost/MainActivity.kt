@@ -8,21 +8,14 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Build
 import androidx.compose.material.icons.filled.Face
 import androidx.compose.material.icons.filled.Home
-import androidx.compose.material3.DrawerState
-import androidx.compose.material3.DrawerValue
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
-import androidx.compose.material3.rememberDrawerState
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.painterResource
 import androidx.lifecycle.viewmodel.compose.viewModel
-import androidx.navigation.NavHostController
-import androidx.navigation.compose.rememberNavController
 import com.bollwerks.eznav.AppDestination
-import com.bollwerks.eznav.DrawerConfig
-import com.bollwerks.eznav.EzDrawer
+import com.bollwerks.eznav.EzNav
 import com.bollwerks.eznav.NavComposableConfig
 import com.bollwerks.eznav.NavHostConfig
 import com.bollwerks.memoryghost.data.AppDatabase
@@ -43,21 +36,20 @@ class MainActivity : ComponentActivity() {
                 AppDestination(AppRoutes.Neuron, "Neuron", Icons.Filled.Face),
                 AppDestination(AppRoutes.Sandbox, "Sandbox", Icons.Filled.Build),
             )
-            val drawerState: DrawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
-            val navController: NavHostController = rememberNavController()
+
             val navHostConfig = remember {
                 NavHostConfig(
                     startDestination = AppRoutes.Neuron.route,
                     composableConfigs = listOf(
                         NavComposableConfig(
                             route = AppRoutes.Home.route,
-                            content = {
+                            content = { _, _ ->
                                 Text("Hello home!")
                             }
                         ),
                         NavComposableConfig(
                             route = AppRoutes.Neuron.route,
-                            content = {
+                            content = { navController, drawerState ->
                                 NeuronTreeScreen(
                                     drawerState = drawerState,
                                     navController = navController,
@@ -67,20 +59,13 @@ class MainActivity : ComponentActivity() {
                         ),
                         NavComposableConfig(
                             route = AppRoutes.Sandbox.route,
-                            content = {
+                            content = { _, drawerState ->
                                 SandboxScreen(
                                     drawerState = drawerState,
                                 )
                             }
                         ),
                     )
-                )
-            }
-            val mainAppIcon = painterResource(R.drawable.ic_launcher_foreground)
-            val drawerConfig = remember {
-                DrawerConfig(
-                    defaultPick = AppRoutes.Home,
-                    mainAppIcon = mainAppIcon,
                 )
             }
 
@@ -90,11 +75,10 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
-                    EzDrawer(
+                    EzNav(
+                        config = appConfig,
                         destinations = destinations,
-                        drawerConfig = drawerConfig,
                         navHostConfig = navHostConfig,
-                        drawerState = drawerState,
                     )
                 }
             }
