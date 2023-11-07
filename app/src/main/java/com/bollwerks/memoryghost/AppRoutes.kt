@@ -17,13 +17,7 @@ object AppRoutes {
         }
 
         fun getId(savedStateHandle: SavedStateHandle): Int? {
-            val value:Int? = savedStateHandle[RouteKeys.id]
-//            return if (value is String) {
-//                value.toInt()
-//            } else {
-//                value as? Int
-//            }
-            return value
+            return savedStateHandle[RouteKeys.id]
         }
     }
     object Sandbox : EzRoute("sandbox")
