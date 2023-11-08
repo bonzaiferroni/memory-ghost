@@ -1,6 +1,7 @@
 package com.bollwerks.memoryghost.ui.neuron
 
 import android.content.res.Configuration
+import android.speech.SpeechRecognizer
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -20,6 +21,7 @@ import androidx.compose.material3.DrawerValue
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
@@ -43,6 +45,7 @@ import com.bollwerks.memoryghost.ui.common.ValueField
 import com.bollwerks.memoryghost.ui.theme.MemoryGhostTheme
 import com.bollwerks.memoryghost.utils.Gaps
 import com.bollwerks.memoryghost.utils.Paddings
+import com.bollwerks.memoryghost.utils.ezspeak.SpeechInputField
 import com.bollwerks.memoryghost.utils.paddingSmall
 
 @Composable
@@ -53,7 +56,7 @@ fun NeuronTreeScreen(
     modifier: Modifier = Modifier,
 ) {
     val uiState by viewModel.uiState.collectAsState()
-    val ctx = LocalContext.current
+    val context = LocalContext.current
 
     AppDialog(
         showDialog = uiState.showEditNeuronDialog,
@@ -65,12 +68,12 @@ fun NeuronTreeScreen(
                 else uiState.parent?.name ?: "(root)",
                 onValueChange = {},
             )
-            ValueField(
+            SpeechInputField(
                 label = "Name",
                 value = uiState.editNeuronName,
                 onValueChange = viewModel::editNeuronName,
             )
-            ValueField(
+            SpeechInputField(
                 label = "Value (optional)",
                 value = uiState.editNeuronValue,
                 onValueChange = viewModel::editNeuronValue,
@@ -96,13 +99,13 @@ fun NeuronTreeScreen(
             ScreenMenuItem(
                 name = "Export",
                 onClick = {
-                    viewModel.exportTree(ctx)
+                    viewModel.exportTree(context)
                 },
             ),
             ScreenMenuItem(
                 name = "Import",
                 onClick = {
-                    viewModel.importTree(ctx)
+                    viewModel.importTree(context)
                 },
             ),
         )
