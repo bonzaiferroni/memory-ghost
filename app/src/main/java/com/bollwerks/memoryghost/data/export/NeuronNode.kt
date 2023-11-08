@@ -14,7 +14,7 @@ fun List<Neuron>.toNeuronNodes(parentId: Int? = null): List<NeuronNode> {
         .map {
             NeuronNode(
                 name = it.name,
-                value = it.value,
+                value = it.answer,
                 children = this.toNeuronNodes(it.id)
             )
         }
@@ -24,7 +24,7 @@ suspend fun DataRepository.importNeurons(nodes: List<NeuronNode>, parentId: Int?
     nodes.forEach {
         val neuron = Neuron(
             name = it.name,
-            value = it.value,
+            answer = it.value,
             parentId = parentId
         )
         val id = this.insert(neuron)

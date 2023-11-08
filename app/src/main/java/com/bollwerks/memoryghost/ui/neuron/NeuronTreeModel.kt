@@ -73,7 +73,7 @@ class NeuronTreeModel(
             showEditNeuronDialog = true,
             editNeuronId = state.neuron?.id ?: 0,
             editNeuronName = state.neuron?.name ?: "",
-            editNeuronValue = state.neuron?.value ?: "",
+            editNeuronValue = state.neuron?.answer ?: "",
         )
     }
 
@@ -94,7 +94,7 @@ class NeuronTreeModel(
             val neuron = Neuron(
                 id = state.editNeuronId,
                 name = state.editNeuronName,
-                value = state.editNeuronValue.takeIf { it.isNotBlank() },
+                answer = state.editNeuronValue.takeIf { it.isNotBlank() },
                 parentId = if (state.isNewNeuron) state.neuron?.id else state.neuron?.parentId,
             )
             if (state.isNewNeuron) {

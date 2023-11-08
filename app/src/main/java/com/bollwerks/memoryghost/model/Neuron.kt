@@ -22,7 +22,7 @@ data class Neuron(
     @PrimaryKey(autoGenerate = true)
     val id: Int = 0,
     val name: String = "",
-    val value: String? = null,
+    val answer: String? = null,
     @ColumnInfo(name = "parent_id")
     val parentId: Int? = null,
     val priority: Int = 0,

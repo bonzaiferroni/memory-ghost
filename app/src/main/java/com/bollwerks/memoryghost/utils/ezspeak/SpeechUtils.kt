@@ -2,6 +2,7 @@ package com.bollwerks.memoryghost.utils.ezspeak
 
 import android.content.Context
 import android.content.Intent
+import android.os.Build
 import android.os.Bundle
 import android.speech.RecognitionListener
 import android.speech.RecognizerIntent
@@ -23,7 +24,9 @@ fun rememberSpeechRecognizer(context: Context): SpeechRecognizer {
     return speechRecognizer
 }
 
-fun SpeechRecognizer.startListening() {
+fun SpeechRecognizer.startListening(
+    biasingStrings: List<String>? = null,
+) {
     val intent = Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH).apply {
         putExtra(
             RecognizerIntent.EXTRA_LANGUAGE_MODEL,
@@ -31,6 +34,9 @@ fun SpeechRecognizer.startListening() {
         )
         putExtra(RecognizerIntent.EXTRA_LANGUAGE, Locale.current.toString())
         putExtra(RecognizerIntent.EXTRA_PROMPT, "Speak now...")
+        if (biasingStrings != null && Build.VERSION.SDK_INT > Build.VERSION_CODES.TIRAMISU) {
+            putExtra(RecognizerIntent.EXTRA_BIASING_STRINGS, biasingStrings.toTypedArray())
+        }
     }
     this.startListening(intent)
 }

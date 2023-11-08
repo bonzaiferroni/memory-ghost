@@ -9,7 +9,7 @@ import com.bollwerks.memoryghost.data.dao.NeuronDao
 import com.bollwerks.memoryghost.model.Neuron
 import com.bollwerks.memoryghost.model.Refresh
 
-@Database(entities = [Neuron::class, Refresh::class], version = 6, exportSchema = true)
+@Database(entities = [Neuron::class, Refresh::class], version = 7, exportSchema = true)
 @TypeConverters(Converters::class)
 abstract class AppDatabase : RoomDatabase() {
     abstract fun neuronDao(): NeuronDao

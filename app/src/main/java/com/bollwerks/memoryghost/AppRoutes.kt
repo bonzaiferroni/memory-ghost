@@ -20,6 +20,7 @@ object AppRoutes {
             return savedStateHandle[RouteKeys.id]
         }
     }
+    object Study : EzRoute("quiz")
     object Sandbox : EzRoute("sandbox")
 }
 

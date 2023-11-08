@@ -23,18 +23,22 @@ interface NeuronDao {
     @Query("SELECT * FROM neuron WHERE parent_id IS NULL")
     fun getRoots(): Flow<List<Neuron>>
 
-    @Query("""
+    @Query(
+        """
         SELECT * FROM neuron
         WHERE overprep > 0
-        AND value IS NOT NULL
-    """)
+        AND answer IS NOT NULL
+    """
+    )
     fun getOverprep(): Flow<List<Neuron>>
 
-    @Query("""
+    @Query(
+        """
         SELECT * FROM neuron
         WHERE refreshed + interval < :now
-        AND value IS NOT NULL
-    """)
+        AND answer IS NOT NULL
+    """
+    )
     fun getRefreshReady(now: Long): Flow<List<Neuron>>
 
     @Query("SELECT * FROM neuron WHERE name LIKE :name")

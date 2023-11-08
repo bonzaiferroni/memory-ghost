@@ -9,10 +9,10 @@ object SampleData {
         listOf(
             Neuron(id = ++id, name = "angular CLI"),
             Neuron(id = ++id, name = "generate component",
-                value = "ng generate component my-component --standalone --skip-tests",
+                answer = "ng generate component my-component --standalone --skip-tests",
                 parentId = 1),
             Neuron(id = ++id, name = "generate service",
-                value = "ng generate service my-service --skip-tests",
+                answer = "ng generate service my-service --skip-tests",
                 parentId = 1),
         )
     }

@@ -34,3 +34,9 @@ object Gaps {
 }
 
 fun Modifier.paddingSmall(): Modifier = composed { this.padding(Paddings.small()) }
+fun Modifier.paddingMedium(): Modifier = composed { this.padding(Paddings.medium()) }
+fun Modifier.paddingLarge(): Modifier = composed { this.padding(Paddings.large()) }
+
+fun Modifier.gapSmall(): Modifier = composed { this.padding(Gaps.small()) }
+fun Modifier.gapMedium(): Modifier = composed { this.padding(Gaps.medium()) }
+fun Modifier.gapLarge(): Modifier = composed { this.padding(Gaps.large()) }

@@ -1,7 +1,6 @@
 package com.bollwerks.memoryghost.ui.neuron
 
 import android.content.res.Configuration
-import android.speech.SpeechRecognizer
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -21,7 +20,6 @@ import androidx.compose.material3.DrawerValue
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
@@ -149,7 +147,7 @@ fun NeuronTreeScreen(
                                 onClick = viewModel::editNeuron,
                             )
                         }
-                        neuron.value?.let { value ->
+                        neuron.answer?.let { value ->
                             RevealBox() {
                                 Text(
                                     text = value,

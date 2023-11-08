@@ -1,0 +1,106 @@
+package com.bollwerks.memoryghost.ui.quiz
+
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Switch
+import androidx.compose.material3.Text
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.unit.dp
+import com.bollwerks.memoryghost.data.SampleRepository
+import com.bollwerks.memoryghost.ui.theme.MemoryGhostTheme
+import com.bollwerks.memoryghost.utils.PreviewDark
+import com.bollwerks.memoryghost.utils.ezspeak.onResults
+import com.bollwerks.memoryghost.utils.ezspeak.rememberSpeechRecognizer
+import com.bollwerks.memoryghost.utils.ezspeak.startListening
+import com.bollwerks.memoryghost.utils.gapLarge
+import com.bollwerks.memoryghost.utils.paddingSmall
+
+@Composable
+fun StudyScreen(
+    viewModel: StudyModel,
+) {
+    val uiState by viewModel.uiState.collectAsState()
+    val speechRecognizer = rememberSpeechRecognizer(LocalContext.current)
+
+    speechRecognizer.onResults(
+        onResults = viewModel::onAnswer,
+    )
+
+    LaunchedEffect(key1 = uiState.isListening) {
+        if (uiState.isListening) {
+            speechRecognizer.startListening(
+                biasingStrings = uiState.answers,
+            )
+        }
+    }
+
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+            .paddingSmall(),
+    ) {
+        Row(
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.spacedBy(8.dp),
+        ) {
+            Button(
+                onClick = viewModel::startQuiz,
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = MaterialTheme.colorScheme.secondary
+                )
+            ) {
+                Text("Study")
+            }
+            Text(uiState.message)
+            Spacer(modifier = Modifier.weight(1f))
+            Switch(
+                checked = uiState.listen,
+                onCheckedChange = {
+                    viewModel.toggleListen()
+                },
+                thumbContent = {
+                    Text("🎤")
+                }
+            )
+        }
+        Spacer(modifier = Modifier.gapLarge())
+        uiState.question?.let { question ->
+            Text(
+                text = question,
+                style = MaterialTheme.typography.displayMedium,
+                textAlign = TextAlign.Center,
+                modifier = Modifier.fillMaxWidth()
+            )
+            uiState.answers.forEach { answer ->
+                Button(onClick = {
+                    viewModel.onAnswer(answer)
+                }) {
+                    Text(answer)
+                }
+            }
+        }
+    }
+}
+
+@PreviewDark
+@Composable
+fun StudyScreenPreview() {
+    MemoryGhostTheme {
+        StudyScreen(
+            viewModel = StudyModel(dataRepository = SampleRepository()),
+        )
+    }
+}
