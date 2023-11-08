@@ -1,4 +1,4 @@
-package com.bollwerks.memoryghost.utils.ezspeak
+package com.bollwerks.memoryghost.utils.ezlisten
 
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.IconButton
@@ -18,7 +18,7 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 
 @Composable
-fun SpeechInputField(
+fun ListenInputField(
     value: String,
     modifier: Modifier = Modifier,
     label: String = "Speak",
@@ -73,7 +73,7 @@ fun SpeechInputField(
 @Preview
 @Composable
 fun SpeechInputFieldPreview() {
-    SpeechInputField(
+    ListenInputField(
         value = "Hello",
         onValueChange = {},
         isPreview = true,

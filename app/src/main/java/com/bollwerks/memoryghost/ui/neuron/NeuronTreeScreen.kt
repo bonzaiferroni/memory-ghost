@@ -43,7 +43,7 @@ import com.bollwerks.memoryghost.ui.common.ValueField
 import com.bollwerks.memoryghost.ui.theme.MemoryGhostTheme
 import com.bollwerks.memoryghost.utils.Gaps
 import com.bollwerks.memoryghost.utils.Paddings
-import com.bollwerks.memoryghost.utils.ezspeak.SpeechInputField
+import com.bollwerks.memoryghost.utils.ezlisten.ListenInputField
 import com.bollwerks.memoryghost.utils.paddingSmall
 
 @Composable
@@ -66,12 +66,12 @@ fun NeuronTreeScreen(
                 else uiState.parent?.name ?: "(root)",
                 onValueChange = {},
             )
-            SpeechInputField(
+            ListenInputField(
                 label = "Name",
                 value = uiState.editNeuronName,
                 onValueChange = viewModel::editNeuronName,
             )
-            SpeechInputField(
+            ListenInputField(
                 label = "Value (optional)",
                 value = uiState.editNeuronValue,
                 onValueChange = viewModel::editNeuronValue,

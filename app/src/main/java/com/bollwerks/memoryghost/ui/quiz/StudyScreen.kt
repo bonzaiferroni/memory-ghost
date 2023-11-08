@@ -22,9 +22,9 @@ import androidx.compose.ui.unit.dp
 import com.bollwerks.memoryghost.data.SampleRepository
 import com.bollwerks.memoryghost.ui.theme.MemoryGhostTheme
 import com.bollwerks.memoryghost.utils.PreviewDark
-import com.bollwerks.memoryghost.utils.ezspeak.onResults
-import com.bollwerks.memoryghost.utils.ezspeak.rememberSpeechRecognizer
-import com.bollwerks.memoryghost.utils.ezspeak.startListening
+import com.bollwerks.memoryghost.utils.ezlisten.onResults
+import com.bollwerks.memoryghost.utils.ezlisten.rememberSpeechRecognizer
+import com.bollwerks.memoryghost.utils.ezlisten.startListening
 import com.bollwerks.memoryghost.utils.gapLarge
 import com.bollwerks.memoryghost.utils.paddingSmall
 

@@ -1,4 +1,4 @@
-package com.bollwerks.memoryghost.utils.ezspeak
+package com.bollwerks.memoryghost.utils.ezlisten
 
 import android.content.Context
 import android.content.Intent
@@ -45,10 +45,10 @@ fun SpeechRecognizer.onResults(
     onResults: (String) -> Unit,
     onError: () -> Unit = {},
 ) {
-    this.setRecognitionListener(EzSpeakListener(onResults, onError))
+    this.setRecognitionListener(EzRecognitionListener(onResults, onError))
 }
 
-class EzSpeakListener(
+class EzRecognitionListener(
     private val onResults: (String) -> Unit,
     private val onError: () -> Unit,
 ) : RecognitionListener {

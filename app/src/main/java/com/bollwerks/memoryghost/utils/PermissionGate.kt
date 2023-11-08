@@ -67,5 +67,6 @@ fun PermissionGate(
     }
 }
 
-// manifest examples:
+// works with:
 // <uses-permission android:name="android.permission.RECORD_AUDIO" />
+// <uses-permission android:name="android.permission.INTERNET" />
