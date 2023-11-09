@@ -14,8 +14,11 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.platform.LocalContext
 
 @Composable
-fun rememberEzSpeaker(context: Context): EzSpeaker {
-    val speaker = remember { EzSpeaker(context) }
+fun rememberEzSpeaker(
+    context: Context,
+    onDoneSpeaking: () -> Unit,
+): EzSpeaker {
+    val speaker = remember { EzSpeaker(context, onDoneSpeaking) }
 
     DisposableEffect(context) {
         onDispose {
@@ -29,7 +32,7 @@ fun rememberEzSpeaker(context: Context): EzSpeaker {
 fun TextToSpeechExample() {
     val context = LocalContext.current
     var text by remember { mutableStateOf("") }
-    val speaker = rememberEzSpeaker(context)
+    val speaker = rememberEzSpeaker(context, {})
 
     Column {
         OutlinedTextField(

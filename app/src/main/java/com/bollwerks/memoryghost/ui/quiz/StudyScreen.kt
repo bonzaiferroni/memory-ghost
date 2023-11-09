@@ -25,6 +25,7 @@ import com.bollwerks.memoryghost.utils.PreviewDark
 import com.bollwerks.memoryghost.utils.ezlisten.onResults
 import com.bollwerks.memoryghost.utils.ezlisten.rememberSpeechRecognizer
 import com.bollwerks.memoryghost.utils.ezlisten.startListening
+import com.bollwerks.memoryghost.utils.ezspeak.rememberEzSpeaker
 import com.bollwerks.memoryghost.utils.gapLarge
 import com.bollwerks.memoryghost.utils.paddingSmall
 
@@ -32,18 +33,27 @@ import com.bollwerks.memoryghost.utils.paddingSmall
 fun StudyScreen(
     viewModel: StudyModel,
 ) {
+    val context = LocalContext.current
     val uiState by viewModel.uiState.collectAsState()
-    val speechRecognizer = rememberSpeechRecognizer(LocalContext.current)
+    val speechRecognizer = rememberSpeechRecognizer(context)
+    val speaker = rememberEzSpeaker(context, viewModel::onDoneSpeaking)
 
     speechRecognizer.onResults(
         onResults = viewModel::onAnswer,
     )
 
-    LaunchedEffect(key1 = uiState.isListening) {
+    LaunchedEffect(uiState.isListening) {
         if (uiState.isListening) {
             speechRecognizer.startListening(
                 biasingStrings = uiState.answers,
             )
+        }
+    }
+
+    val question = uiState.question
+    LaunchedEffect(question) {
+        if (uiState.speak && question != null) {
+            speaker.speak(question)
         }
     }
 
@@ -73,6 +83,15 @@ fun StudyScreen(
                 },
                 thumbContent = {
                     Text("🎤")
+                }
+            )
+            Switch(
+                checked = uiState.speak,
+                onCheckedChange = {
+                    viewModel.toggleSpeak()
+                },
+                thumbContent = {
+                    Text("🗣")
                 }
             )
         }

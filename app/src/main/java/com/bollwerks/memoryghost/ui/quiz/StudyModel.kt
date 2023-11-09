@@ -35,7 +35,9 @@ class StudyModel(
             state = state.copy(message = "Not enough neurons")
             return
         }
-        val neuron = neurons.shuffled().first()
+        val neuron = neurons
+            .filter { it.name != state.question }
+            .shuffled().first()
         val answers = neurons
             .filter { it.id != neuron.id }
             .shuffled().take(3).map { it.answer!! } + neuron.answer!!
@@ -44,7 +46,7 @@ class StudyModel(
             message = "Next question...",
             question = neuron.name,
             answers = answers.shuffled(),
-            isListening = state.listen
+            isListening = !state.speak && state.listen
         )
     }
 
@@ -59,6 +61,14 @@ class StudyModel(
     fun toggleListen() {
         state = state.copy(listen = !state.listen)
     }
+
+    fun toggleSpeak() {
+        state = state.copy(speak = !state.speak)
+    }
+
+    fun onDoneSpeaking() {
+        state = state.copy(isListening = state.listen)
+    }
 }
 
 data class QuizState(
@@ -66,5 +76,6 @@ data class QuizState(
     val answers: List<String> = emptyList(),
     val message: String = "Ready?",
     val listen: Boolean = true,
+    val speak: Boolean = true,
     val isListening: Boolean = false,
 )
