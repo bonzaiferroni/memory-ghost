@@ -59,6 +59,18 @@ class StudyModel(
             isListening = false,
             isCorrect = isCorrect,
         )
+        if (state.autoPlay) {
+            viewModelScope.launch {
+                kotlinx.coroutines.delay(1000)
+                if (isCorrect) {
+                    startQuiz()
+                } else {
+                    state = state.copy(
+                        isListening = state.listen,
+                    )
+                }
+            }
+        }
     }
 
     fun toggleListen() {
@@ -82,4 +94,5 @@ data class QuizState(
     val speak: Boolean = true,
     val isListening: Boolean = false,
     val isCorrect: Boolean? = null,
+    val autoPlay: Boolean = true,
 )

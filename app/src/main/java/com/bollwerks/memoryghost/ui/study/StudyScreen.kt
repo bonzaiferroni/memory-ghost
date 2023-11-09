@@ -90,6 +90,15 @@ fun StudyScreen(
             Text(uiState.message)
             Spacer(modifier = Modifier.weight(1f))
             Switch(
+                checked = uiState.autoPlay,
+                onCheckedChange = {
+                    viewModel.toggleListen()
+                },
+                thumbContent = {
+                    Text("🔁")
+                }
+            )
+            Switch(
                 checked = uiState.listen,
                 onCheckedChange = {
                     viewModel.toggleListen()
