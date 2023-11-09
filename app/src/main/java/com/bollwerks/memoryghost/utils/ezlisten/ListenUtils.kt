@@ -12,6 +12,7 @@ import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.remember
 import androidx.compose.ui.text.intl.Locale
 
+
 @Composable
 fun rememberSpeechRecognizer(context: Context): SpeechRecognizer {
     val speechRecognizer = remember { SpeechRecognizer.createSpeechRecognizer(context) }
@@ -26,6 +27,7 @@ fun rememberSpeechRecognizer(context: Context): SpeechRecognizer {
 
 fun SpeechRecognizer.startListening(
     biasingStrings: List<String>? = null,
+    additionalTimeMs: Int? = null,
 ) {
     val intent = Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH).apply {
         putExtra(
@@ -36,6 +38,9 @@ fun SpeechRecognizer.startListening(
         putExtra(RecognizerIntent.EXTRA_PROMPT, "Speak now...")
         if (biasingStrings != null && Build.VERSION.SDK_INT > Build.VERSION_CODES.TIRAMISU) {
             putExtra(RecognizerIntent.EXTRA_BIASING_STRINGS, biasingStrings.toTypedArray())
+        }
+        additionalTimeMs?.let {
+            putExtra(RecognizerIntent.EXTRA_SPEECH_INPUT_COMPLETE_SILENCE_LENGTH_MILLIS, it)
         }
     }
     this.startListening(intent)

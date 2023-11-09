@@ -14,9 +14,9 @@ import com.bollwerks.memoryghost.data.AppDatabase
 import com.bollwerks.memoryghost.data.DaoRepository
 import com.bollwerks.memoryghost.ui.neuron.NeuronTreeModel
 import com.bollwerks.memoryghost.ui.neuron.NeuronTreeScreen
-import com.bollwerks.memoryghost.ui.quiz.StudyModel
-import com.bollwerks.memoryghost.ui.quiz.StudyScreen
 import com.bollwerks.memoryghost.ui.sandbox.SandboxScreen
+import com.bollwerks.memoryghost.ui.study.StudyModel
+import com.bollwerks.memoryghost.ui.study.StudyScreen
 
 val appConfig = EzConfig(
 
@@ -49,7 +49,6 @@ val appConfig = EzConfig(
         ),
         ScreenConfig(
             route = AppRoutes.Neuron,
-            isDefaultRoute = true,
             drawerLink = DrawerLinkConfig(AppRoutes.Neuron, "Neuron", "🧠"),
             content = { navController, drawerState, vmFactory ->
                 NeuronTreeScreen(
@@ -61,6 +60,7 @@ val appConfig = EzConfig(
         ),
         ScreenConfig(
             route = AppRoutes.Study,
+            isDefaultRoute = true,
             drawerLink = DrawerLinkConfig(AppRoutes.Study, "Study", "📝"),
             content = { _, _, vmFactory ->
                 StudyScreen(

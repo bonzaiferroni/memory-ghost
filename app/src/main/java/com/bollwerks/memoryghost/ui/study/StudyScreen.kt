@@ -1,4 +1,4 @@
-package com.bollwerks.memoryghost.ui.quiz
+package com.bollwerks.memoryghost.ui.study
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -19,9 +19,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import com.bollwerks.memoryghost.R
 import com.bollwerks.memoryghost.data.SampleRepository
 import com.bollwerks.memoryghost.ui.theme.MemoryGhostTheme
 import com.bollwerks.memoryghost.utils.PreviewDark
+import com.bollwerks.memoryghost.utils.ezchime.rememberChimePlayer
 import com.bollwerks.memoryghost.utils.ezlisten.onResults
 import com.bollwerks.memoryghost.utils.ezlisten.rememberSpeechRecognizer
 import com.bollwerks.memoryghost.utils.ezlisten.startListening
@@ -37,6 +39,7 @@ fun StudyScreen(
     val uiState by viewModel.uiState.collectAsState()
     val speechRecognizer = rememberSpeechRecognizer(context)
     val speaker = rememberEzSpeaker(context, viewModel::onDoneSpeaking)
+    val chime = rememberChimePlayer(R.raw.correct, R.raw.incorrect)
 
     speechRecognizer.onResults(
         onResults = viewModel::onAnswer,
@@ -54,6 +57,16 @@ fun StudyScreen(
     LaunchedEffect(question) {
         if (uiState.speak && question != null) {
             speaker.speak(question)
+        }
+    }
+
+    LaunchedEffect(uiState.isCorrect) {
+        uiState.isCorrect?.let {
+            if (it) {
+                chime.play(R.raw.correct)
+            } else {
+                chime.play(R.raw.incorrect)
+            }
         }
     }
 

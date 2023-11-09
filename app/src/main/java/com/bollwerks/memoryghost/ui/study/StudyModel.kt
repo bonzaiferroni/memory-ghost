@@ -1,4 +1,4 @@
-package com.bollwerks.memoryghost.ui.quiz
+package com.bollwerks.memoryghost.ui.study
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -46,15 +46,18 @@ class StudyModel(
             message = "Next question...",
             question = neuron.name,
             answers = answers.shuffled(),
-            isListening = !state.speak && state.listen
+            isListening = !state.speak && state.listen,
+            isCorrect = null,
         )
     }
 
     fun onAnswer(answer: String) {
-        val message = if (answer == correctAnswer) "Correct 🙌" else "Try again"
+        val isCorrect = answer == correctAnswer
+        val message = if (isCorrect) "Correct 🙌" else "Try again"
         state = state.copy(
             message = message,
             isListening = false,
+            isCorrect = isCorrect,
         )
     }
 
@@ -78,4 +81,5 @@ data class QuizState(
     val listen: Boolean = true,
     val speak: Boolean = true,
     val isListening: Boolean = false,
+    val isCorrect: Boolean? = null,
 )
