@@ -25,15 +25,15 @@ class SampleRepository : DataRepository {
         return flowOf(SampleData.neurons.filter { it.parentId == null })
     }
 
-    override suspend fun insert(neuron: Neuron): Int {
+    override suspend fun insertNeuron(neuron: Neuron): Int {
         return 0
     }
 
-    override suspend fun update(neuron: Neuron) {
+    override suspend fun updateNeuron(neuron: Neuron) {
         // no-op
     }
 
-    override suspend fun delete(neuron: Neuron) {
+    override suspend fun deleteNeuron(id: Int) {
         // no-op
     }
 }

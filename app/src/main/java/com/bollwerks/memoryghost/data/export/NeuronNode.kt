@@ -27,7 +27,7 @@ suspend fun DataRepository.importNeurons(nodes: List<NeuronNode>, parentId: Int?
             answer = it.value,
             parentId = parentId
         )
-        val id = this.insert(neuron)
+        val id = this.insertNeuron(neuron)
         this.importNeurons(nodes = it.children, parentId = id)
     }
 }

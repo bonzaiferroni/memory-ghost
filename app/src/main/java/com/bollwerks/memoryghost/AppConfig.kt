@@ -49,6 +49,7 @@ val appConfig = EzConfig(
         ),
         ScreenConfig(
             route = AppRoutes.Neuron,
+            isDefaultRoute = true,
             drawerLink = DrawerLinkConfig(AppRoutes.Neuron, "Neuron", "🧠"),
             content = { navController, drawerState, vmFactory ->
                 NeuronTreeScreen(
@@ -60,7 +61,6 @@ val appConfig = EzConfig(
         ),
         ScreenConfig(
             route = AppRoutes.Study,
-            isDefaultRoute = true,
             drawerLink = DrawerLinkConfig(AppRoutes.Study, "Study", "📝"),
             content = { _, _, vmFactory ->
                 StudyScreen(

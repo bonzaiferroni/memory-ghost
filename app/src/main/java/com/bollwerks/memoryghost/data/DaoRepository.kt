@@ -27,15 +27,15 @@ class DaoRepository(
         return neuronDao.searchByName(name)
     }
 
-    override suspend fun insert(neuron: Neuron): Int {
+    override suspend fun insertNeuron(neuron: Neuron): Int {
         return neuronDao.insert(neuron).toInt()
     }
 
-    override suspend fun update(neuron: Neuron) {
+    override suspend fun updateNeuron(neuron: Neuron) {
         neuronDao.update(neuron)
     }
 
-    override suspend fun delete(neuron: Neuron) {
-        neuronDao.delete(neuron)
+    override suspend fun deleteNeuron(id: Int) {
+        neuronDao.delete(Neuron(id = id))
     }
 }

@@ -9,7 +9,7 @@ interface DataRepository {
     fun getNeuronsByParentId(parentId: Int): Flow<List<Neuron>>
     fun getRootNeurons(): Flow<List<Neuron>>
     fun searchNeuronByName(name: String): Flow<List<Neuron>>
-    suspend fun insert(neuron: Neuron): Int
-    suspend fun update(neuron: Neuron)
-    suspend fun delete(neuron: Neuron)
+    suspend fun insertNeuron(neuron: Neuron): Int
+    suspend fun updateNeuron(neuron: Neuron)
+    suspend fun deleteNeuron(id: Int)
 }

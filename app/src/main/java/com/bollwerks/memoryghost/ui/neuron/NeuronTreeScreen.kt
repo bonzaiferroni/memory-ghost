@@ -12,7 +12,6 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
-import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.DrawerState
@@ -35,16 +34,13 @@ import com.bollwerks.eznav.model.FabConfig
 import com.bollwerks.memoryghost.AppRoutes
 import com.bollwerks.memoryghost.RouteKeys
 import com.bollwerks.memoryghost.data.SampleRepository
-import com.bollwerks.memoryghost.ui.common.AcceptCancelButtons
-import com.bollwerks.memoryghost.ui.common.AppDialog
-import com.bollwerks.memoryghost.ui.common.MgIconButton
+import com.bollwerks.memoryghost.model.Neuron
 import com.bollwerks.memoryghost.ui.common.RevealBox
-import com.bollwerks.memoryghost.ui.common.ValueField
 import com.bollwerks.memoryghost.ui.theme.MemoryGhostTheme
 import com.bollwerks.memoryghost.utils.Gaps
 import com.bollwerks.memoryghost.utils.Paddings
-import com.bollwerks.memoryghost.utils.ezlisten.ListenInputField
-import com.bollwerks.memoryghost.utils.paddingSmall
+import com.bollwerks.memoryghost.utils.ghostui.MoreMenu
+import com.bollwerks.memoryghost.utils.ghostui.MoreMenuItem
 
 @Composable
 fun NeuronTreeScreen(
@@ -56,33 +52,15 @@ fun NeuronTreeScreen(
     val uiState by viewModel.uiState.collectAsState()
     val context = LocalContext.current
 
-    AppDialog(
-        showDialog = uiState.showEditNeuronDialog,
-    ) {
-        Column(modifier = Modifier.paddingSmall()) {
-            ValueField(
-                label = "Parent",
-                value = if (uiState.isNewNeuron) uiState.neuron?.name ?: "(root)"
-                else uiState.parent?.name ?: "(root)",
-                onValueChange = {},
-            )
-            ListenInputField(
-                label = "Name",
-                value = uiState.editNeuronName,
-                onValueChange = viewModel::editNeuronName,
-            )
-            ListenInputField(
-                label = "Value (optional)",
-                value = uiState.editNeuronValue,
-                onValueChange = viewModel::editNeuronValue,
-            )
-            AcceptCancelButtons(
-                onAccept = viewModel::acceptEditNeuron,
-                onCancel = viewModel::cancelEditNeuron,
-                enabled = uiState.isValidEditNeuron,
-            )
-        }
-    }
+    EditNeuronDialog(
+        viewModel = viewModel,
+        uiState = uiState,
+    )
+
+    MultiAddDialog(
+        viewModel = viewModel,
+        uiState = uiState,
+    )
 
     EzScaffold(
         modifier = modifier,
@@ -106,6 +84,12 @@ fun NeuronTreeScreen(
                     viewModel.importTree(context)
                 },
             ),
+            ScreenMenuItem(
+                name = "MultiAdd",
+                onClick = {
+                    viewModel.showMultiAddDialog()
+                },
+            )
         )
     ) {
         Column(
@@ -115,55 +99,26 @@ fun NeuronTreeScreen(
             verticalArrangement = Arrangement.spacedBy(Gaps.medium()),
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
-
             uiState.neuron?.let { neuron ->
+                // display parent
                 OtherNeuronCard(
                     name = uiState.parent?.name ?: "\uD83C\uDF33",
                 ) {
                     AppRoutes.Neuron.navigate(navController, uiState.parent?.id)
                 }
-                Card(
-                    colors = CardDefaults.cardColors(
-                        containerColor = MaterialTheme.colorScheme.primaryContainer
-                    )
-                ) {
-                    Column(
-                        modifier = Modifier
-                            .padding(Paddings.small()),
-                        verticalArrangement = Arrangement.spacedBy(Gaps.medium()),
-                    ) {
-                        Box() {
-                            Text(
-                                text = neuron.name,
-                                textAlign = TextAlign.Center,
-                                style = MaterialTheme.typography.headlineSmall,
-                                modifier = Modifier
-                                    .align(Alignment.Center)
-                                    .fillMaxWidth(),
-                            )
-                            MgIconButton(
-                                icon = Icons.Filled.Edit,
-                                modifier = Modifier.align(Alignment.CenterEnd),
-                                onClick = viewModel::editNeuron,
-                            )
-                        }
-                        neuron.answer?.let { value ->
-                            RevealBox() {
-                                Text(
-                                    text = value,
-                                    textAlign = TextAlign.Center,
-                                    modifier = Modifier
-                                        .fillMaxWidth(),
-                                )
-                            }
-                        }
-                    }
-                }
+                // display focused neuron
+                NeuronCard(
+                    neuron = neuron,
+                    uiState = uiState,
+                    viewModel = viewModel,
+                    navController = navController,
+                )
             }
-
+            // display children
             LazyColumn(
                 verticalArrangement = Arrangement.spacedBy(Gaps.medium()),
                 horizontalAlignment = Alignment.CenterHorizontally,
+                modifier = Modifier.fillMaxWidth(),
             ) {
                 items(uiState.children) { neuron ->
                     OtherNeuronCard(
@@ -171,6 +126,66 @@ fun NeuronTreeScreen(
                     ) {
                         AppRoutes.Neuron.navigate(navController, neuron.id)
                     }
+                }
+            }
+        }
+    }
+}
+
+@Composable
+fun NeuronCard(
+    neuron: Neuron,
+    uiState: NeuronTreeState,
+    viewModel: NeuronTreeModel,
+    navController: NavController?,
+) {
+    Card(
+        colors = CardDefaults.cardColors(
+            containerColor = MaterialTheme.colorScheme.primaryContainer
+        )
+    ) {
+        Column(
+            modifier = Modifier
+                .padding(Paddings.small()),
+            verticalArrangement = Arrangement.spacedBy(Gaps.medium()),
+        ) {
+            Box() {
+                Text(
+                    text = neuron.name,
+                    textAlign = TextAlign.Center,
+                    style = MaterialTheme.typography.headlineSmall,
+                    modifier = Modifier
+                        .align(Alignment.Center)
+                        .fillMaxWidth(),
+                )
+                MoreMenu(
+                    navController = navController,
+                    modifier = Modifier.align(Alignment.TopEnd),
+                    items = listOf(
+                        MoreMenuItem(
+                            name = "Edit",
+                            onClick = { viewModel.editNeuron() },
+                        ),
+                        MoreMenuItem(
+                            name = "Delete",
+                            onClick = {
+                                viewModel.deleteNeuron() {
+                                    val parentId = uiState.parent?.id ?: 0
+                                    AppRoutes.Neuron.navigate(navController, parentId)
+                                }
+                            },
+                        ),
+                    )
+                )
+            }
+            neuron.answer?.let { value ->
+                RevealBox() {
+                    Text(
+                        text = value,
+                        textAlign = TextAlign.Center,
+                        modifier = Modifier
+                            .fillMaxWidth(),
+                    )
                 }
             }
         }

@@ -98,9 +98,9 @@ class NeuronTreeModel(
                 parentId = if (state.isNewNeuron) state.neuron?.id else state.neuron?.parentId,
             )
             if (state.isNewNeuron) {
-                dataRepository.insert(neuron)
+                dataRepository.insertNeuron(neuron)
             } else {
-                dataRepository.update(neuron)
+                dataRepository.updateNeuron(neuron)
             }
             state = state.copy(showEditNeuronDialog = false)
         }
@@ -121,6 +121,47 @@ class NeuronTreeModel(
             dataRepository.importNeurons(nodes)
         }
     }
+
+    fun deleteNeuron(
+        onDelete: () -> Unit,
+    ) {
+        viewModelScope.launch {
+            dataRepository.deleteNeuron(neuronId)
+            onDelete()
+        }
+    }
+
+    fun showMultiAddDialog() {
+        state = state.copy(
+            showMultiAddDialog = true,
+            multiAddText = "",
+        )
+    }
+
+    fun onMultiAddChange(text: String) {
+        state = state.copy(multiAddText = text)
+    }
+
+    fun acceptMultiAdd() {
+        viewModelScope.launch {
+            val neurons = state.multiAddText.split("\n").map { line ->
+                val parts = line.split(":")
+                Neuron(
+                    name = parts[0],
+                    answer = parts.getOrNull(1)?.trim(),
+                    parentId = state.neuron?.id,
+                )
+            }
+            neurons.forEach {
+                dataRepository.insertNeuron(it)
+            }
+            state = state.copy(showMultiAddDialog = false)
+        }
+    }
+
+    fun cancelMultiAdd() {
+        state = state.copy(showMultiAddDialog = false)
+    }
 }
 
 data class NeuronTreeState(
@@ -131,6 +172,8 @@ data class NeuronTreeState(
     val editNeuronId: Int = 0,
     val editNeuronName: String = "",
     val editNeuronValue: String = "",
+    val showMultiAddDialog: Boolean = false,
+    val multiAddText: String = "",
 ) {
     val isNewNeuron: Boolean
         get() = editNeuronId == 0
