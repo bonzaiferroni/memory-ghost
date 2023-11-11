@@ -16,7 +16,7 @@ import androidx.room.PrimaryKey
             onDelete = ForeignKey.CASCADE
         )
     ],
-    indices = [Index("name")]
+    indices = [Index("name"), Index("parent_id")]
 )
 data class Neuron(
     @PrimaryKey(autoGenerate = true)

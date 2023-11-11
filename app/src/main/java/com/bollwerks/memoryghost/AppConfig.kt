@@ -12,6 +12,8 @@ import com.bollwerks.eznav.model.ScaffoldConfig
 import com.bollwerks.eznav.model.ScreenConfig
 import com.bollwerks.memoryghost.data.AppDatabase
 import com.bollwerks.memoryghost.data.DaoRepository
+import com.bollwerks.memoryghost.ui.bot.BotModel
+import com.bollwerks.memoryghost.ui.bot.BotScreen
 import com.bollwerks.memoryghost.ui.neuron.NeuronTreeModel
 import com.bollwerks.memoryghost.ui.neuron.NeuronTreeScreen
 import com.bollwerks.memoryghost.ui.sandbox.SandboxScreen
@@ -33,6 +35,9 @@ val appConfig = EzConfig(
             }
             initializer {
                 StudyModel(dataRepository)
+            }
+            initializer {
+                BotModel()
             }
         }
     },
@@ -60,7 +65,6 @@ val appConfig = EzConfig(
         ),
         ScreenConfig(
             route = AppRoutes.Study,
-            isDefaultRoute = true,
             drawerLink = DrawerLinkConfig(AppRoutes.Study, "Study", "📝"),
             content = { _, _, vmFactory ->
                 StudyScreen(
@@ -80,5 +84,18 @@ val appConfig = EzConfig(
                 )
             }
         ),
+        ScreenConfig(
+            route = AppRoutes.Bot,
+            isDefaultRoute = true,
+            drawerLink = DrawerLinkConfig(AppRoutes.Bot, "Bot", "🤖"),
+            content = { _, _, vmFactory ->
+                BotScreen(
+                    viewModel = viewModel(factory = vmFactory)
+                )
+            },
+            scaffold = ScaffoldConfig(
+                title = "Study"
+            ),
+        )
     )
 )

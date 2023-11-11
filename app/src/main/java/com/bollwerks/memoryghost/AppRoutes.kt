@@ -22,6 +22,7 @@ object AppRoutes {
     }
     object Study : EzRoute("quiz")
     object Sandbox : EzRoute("sandbox")
+    object Bot : EzRoute("bot")
 }
 
 object RouteKeys {

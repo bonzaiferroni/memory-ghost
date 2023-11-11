@@ -1,5 +1,6 @@
 package com.bollwerks.memoryghost.utils
 
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -40,3 +41,10 @@ fun Modifier.paddingLarge(): Modifier = composed { this.padding(Paddings.large()
 fun Modifier.gapSmall(): Modifier = composed { this.padding(Gaps.small()) }
 fun Modifier.gapMedium(): Modifier = composed { this.padding(Gaps.medium()) }
 fun Modifier.gapLarge(): Modifier = composed { this.padding(Gaps.large()) }
+
+@Composable
+fun Arrangement.spacedBySmall(): Arrangement.HorizontalOrVertical = spacedBy(Paddings.small())
+@Composable
+fun Arrangement.spacedByMedium(): Arrangement.HorizontalOrVertical = spacedBy(Paddings.medium())
+@Composable
+fun Arrangement.spacedByLarge(): Arrangement.HorizontalOrVertical = spacedBy(Paddings.large())
