@@ -25,7 +25,7 @@ fun ListenInputField(
     onValueChange: (String) -> Unit,
     isPreview: Boolean = false,
 ) {
-    val speechRecognizer = if (isPreview) null else rememberSpeechRecognizer(LocalContext.current)
+    val speechRecognizer = if (isPreview) null else rememberEzListener(LocalContext.current)
     val isListening = remember { mutableStateOf(false) }
     val focusRequester = remember { FocusRequester() }
 

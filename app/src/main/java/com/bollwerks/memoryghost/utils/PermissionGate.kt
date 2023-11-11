@@ -70,3 +70,4 @@ fun PermissionGate(
 // works with:
 // <uses-permission android:name="android.permission.RECORD_AUDIO" />
 // <uses-permission android:name="android.permission.INTERNET" />
+// <uses-permission android:name="android.permission.BLUETOOTH_CONNECT" />

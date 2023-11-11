@@ -24,9 +24,7 @@ import com.bollwerks.memoryghost.data.SampleRepository
 import com.bollwerks.memoryghost.ui.theme.MemoryGhostTheme
 import com.bollwerks.memoryghost.utils.PreviewDark
 import com.bollwerks.memoryghost.utils.ezchime.rememberChimePlayer
-import com.bollwerks.memoryghost.utils.ezlisten.onResults
-import com.bollwerks.memoryghost.utils.ezlisten.rememberSpeechRecognizer
-import com.bollwerks.memoryghost.utils.ezlisten.startListening
+import com.bollwerks.memoryghost.utils.ezlisten.rememberEzListener
 import com.bollwerks.memoryghost.utils.ezspeak.rememberEzSpeaker
 import com.bollwerks.memoryghost.utils.gapLarge
 import com.bollwerks.memoryghost.utils.paddingSmall
@@ -37,7 +35,7 @@ fun StudyScreen(
 ) {
     val context = LocalContext.current
     val uiState by viewModel.uiState.collectAsState()
-    val speechRecognizer = rememberSpeechRecognizer(context)
+    val speechRecognizer = rememberEzListener(context)
     val speaker = rememberEzSpeaker(context, viewModel::onDoneSpeaking)
     val chime = rememberChimePlayer(R.raw.correct, R.raw.incorrect)
 
@@ -53,10 +51,10 @@ fun StudyScreen(
         }
     }
 
-    val question = uiState.question
-    LaunchedEffect(question) {
-        if (uiState.speak && question != null) {
-            speaker.speak(question)
+    val spokenMessage = uiState.spokenMessage
+    LaunchedEffect(spokenMessage) {
+        if (uiState.speak && spokenMessage != null) {
+            speaker.speak(spokenMessage)
         }
     }
 
@@ -64,8 +62,6 @@ fun StudyScreen(
         uiState.isCorrect?.let {
             if (it) {
                 chime.play(R.raw.correct)
-            } else {
-                chime.play(R.raw.incorrect)
             }
         }
     }

@@ -45,6 +45,7 @@ class StudyModel(
         state = state.copy(
             message = "Next question...",
             question = neuron.name,
+            spokenMessage = neuron.name,
             answers = answers.shuffled(),
             isListening = !state.speak && state.listen,
             isCorrect = null,
@@ -52,23 +53,18 @@ class StudyModel(
     }
 
     fun onAnswer(answer: String) {
-        val isCorrect = answer == correctAnswer
-        val message = if (isCorrect) "Correct 🙌" else "Try again"
+        val isCorrect = answer.equals(correctAnswer, ignoreCase = true)
+        val message = if (isCorrect) "Correct 🙌" else "$answer is incorrect, try again"
         state = state.copy(
             message = message,
             isListening = false,
             isCorrect = isCorrect,
+            spokenMessage = if (isCorrect) state.spokenMessage else "The answer was $correctAnswer",
         )
         if (state.autoPlay) {
             viewModelScope.launch {
                 kotlinx.coroutines.delay(1000)
-                if (isCorrect) {
-                    startQuiz()
-                } else {
-                    state = state.copy(
-                        isListening = state.listen,
-                    )
-                }
+                startQuiz()
             }
         }
     }
@@ -95,4 +91,5 @@ data class QuizState(
     val isListening: Boolean = false,
     val isCorrect: Boolean? = null,
     val autoPlay: Boolean = true,
+    val spokenMessage: String? = null,
 )

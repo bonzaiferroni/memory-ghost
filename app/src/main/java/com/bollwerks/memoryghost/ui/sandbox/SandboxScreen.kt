@@ -19,7 +19,9 @@ fun SandboxScreen(
         title = "\uD83C\uDFD6\uFE0F",
     ) {
         PermissionGate(Manifest.permission.INTERNET) {
-            TextToSpeechExample()
+            PermissionGate(Manifest.permission.BLUETOOTH_CONNECT) {
+                TextToSpeechExample()
+            }
         }
     }
 }
